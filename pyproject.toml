@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "django-service"
+name = "django-python-service"
 version = "0.1.0"
-description = "django-service"
+description = "Django Python Service"
 authors = ["Ayush Pandey <ayushpandey.iitkgp@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "3.10.8"
 django = "^5.1"
 
 
