@@ -8,11 +8,7 @@ router = DefaultRouter()
 urlpatterns = [
     path(
         "<uuid:user_id>/",
-        TranslateAndRetrieveAPIView.as_view(
-            {
-                "get": "list",
-            }
-        ),
+        TranslateAndRetrieveAPIView.as_view(),
         name="users-list",
     ),
 ]

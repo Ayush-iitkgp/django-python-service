@@ -25,6 +25,10 @@ services:
       network: host
     image: django_python_service
     command: tail -F anything
+    volumes:
+      - ./app:/opt/django-python-service/app
+      - ./translation:/opt/django-python-service/translation
+      - ./tests:/opt/django-python-service/tests
     ports:
       - "8000:8000"
     environment:

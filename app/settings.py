@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
+
 import os
 from pathlib import Path
 
@@ -20,12 +21,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ij#)ogz2ehv=627c2^p4)%qref42@20ps_!o@$p%4ty#bhr==d"
+SECRET_KEY = os.getenv("SECRET_KEY", default="secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOW_HEADERS = [
+    "api-key",
+    "API-KEY",
+    "content-type",
+    "accept",
+    "origin",
+    "authorization",
+    "x-csrftoken",
+    "x-requested-with",
+    "x-api-token",
+    "X-API-TOKEN",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -38,6 +54,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "translation.apps.TranslationConfig",
+    "rest_framework",
+    "rest_framework_api_key",
 ]
 
 MIDDLEWARE = [

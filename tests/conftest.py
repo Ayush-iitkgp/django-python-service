@@ -1,5 +1,6 @@
 import os
 from typing import Generator
+from uuid import UUID, uuid4
 
 import django
 import pytest
@@ -13,24 +14,43 @@ def pytest_configure() -> None:
 pytest_configure()
 
 from rest_framework.test import APIClient  # noqa: E402
+from rest_framework_api_key.models import APIKey  # noqa: E402
 
 from translation.models import Translation  # noqa: E402
 
 
 @pytest.fixture
-def translation() -> Generator[Translation]:
-    yield Translation.objects.create(name="Test Team")
-
-
-# @pytest.fixture
-# def api_key() -> API:
-#     project_api_key, key = ProjectAPIKey.objects.create_key(name="Test API Key")
-#     project_api_key.projects.add(project)
-#     yield key
+def user_id() -> Generator[UUID, None, None]:
+    yield uuid4()
 
 
 @pytest.fixture
-def client_api_token(api_key: str) -> Generator[APIClient]:
+def original_content() -> Generator[str, None, None]:
+    yield "Hello World!"
+
+
+@pytest.fixture
+def translated_content() -> Generator[str, None, None]:
+    yield "Hallo Welt!"
+
+
+@pytest.fixture
+def translation(user_id: UUID, original_content: str, translated_content: str) -> Generator[Translation, None, None]:
+    yield Translation.objects.create(
+        user_id=user_id,
+        original_content=original_content,
+        translated_content=translated_content,
+    )
+
+
+@pytest.fixture
+def api_key() -> Generator[str, None, None]:
+    project_api_key, key = APIKey.objects.create_key(name="Test API Key")
+    yield key
+
+
+@pytest.fixture
+def client_api_token(api_key: str) -> Generator[APIClient, None, None]:
     client = APIClient()
-    client.credentials(HTTP_X_API_KEY=api_key)
+    client.credentials(API_KEY=api_key)
     yield client
