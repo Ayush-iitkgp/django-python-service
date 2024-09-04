@@ -17,8 +17,34 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
+SCHEMA_TITLE = "Django Python Service.ai"
+SCHEMA_DESCRIPTION = "API Django Python Service"
+SCHEMA_VERSION = "1.0.0"
+SCHEMA_DEFAULT_VERSION = "v1"
+
+
+openapi_schema_private = get_schema_view(
+    openapi.Info(
+        title=SCHEMA_TITLE,
+        description=SCHEMA_DESCRIPTION,
+        version=SCHEMA_VERSION,
+        default_version=SCHEMA_DEFAULT_VERSION,
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("v1/translation/", include("translation.urls")),
+    path(
+        "redoc",
+        openapi_schema_private.with_ui("redoc", cache_timeout=0),
+        name="schema-redoc-private",
+    ),
 ]
