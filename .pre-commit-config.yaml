@@ -15,12 +15,18 @@ repos:
         language: system
         types: [ python ]
         exclude: '.*/migrations/.*'
+        args: [
+          '--line-length=120'
+        ]
       - id: flake8
         name: flake8
         entry: flake8
         language: system
         types: [ python ]
         exclude: '.*/migrations/.*'
+        args: [
+          '--max-line-length=120'
+        ]
       - id: isort
         name: isort
         entry: isort
@@ -30,6 +36,7 @@ repos:
         args: [
             '--profile=black',
             '--section-default=THIRDPARTY',
+            '-l=120'
         ]
       - id: mypy
         name: mypy
