@@ -29,6 +29,7 @@ services:
       - ./app:/opt/django-python-service/app
       - ./translation:/opt/django-python-service/translation
       - ./tests:/opt/django-python-service/tests
+      - ./pyproject.toml:/opt/django-python-service/pyproject.toml
     ports:
       - "8000:8000"
     environment:
