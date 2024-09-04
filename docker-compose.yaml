@@ -23,12 +23,10 @@ services:
       context: .
       dockerfile: Dockerfile
       network: host
-    dns:
-      - 1.1.1.1
-    image: service
+    image: django_python_service
     command: tail -F anything
     volumes:
-      - .:/workspace
+      - .:/opt/django-python-service
     ports:
       - "8000:8000"
     environment:

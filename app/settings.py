@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "translation.apps.TranslationsConfig",
+    "translation.apps.TranslationConfig",
 ]
 
 MIDDLEWARE = [
@@ -84,6 +84,8 @@ DATABASES = {
         "PORT": os.environ.get("POSTGRES_PORT", ""),
     }
 }
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "app.settings"
 
 
 # Password validation
