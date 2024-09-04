@@ -10,6 +10,8 @@ readme = "README.md"
 python = "3.10.8"
 django = "4.2.7"
 psycopg2 = "^2.9.9"
+djangorestframework = "3.14.0"
+djangorestframework-api-key = "2.3.0"
 
 
 [tool.poetry.group.dev.dependencies]

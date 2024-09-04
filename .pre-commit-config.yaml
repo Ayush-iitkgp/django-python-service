@@ -38,4 +38,9 @@ repos:
         entry: mypy
         language: system
         types: [ python ]
-        exclude: '.*/migrations/.*|tests/pacts/.*|app/subscription/models.py|tests/app/subscription/services/test_subscription_date_helper.py'
+        exclude: '.*/migrations/.*'
+        args: [
+          '--ignore-missing-imports',
+          '--disallow-untyped-defs',
+          '--warn-redundant-casts',
+        ]
