@@ -8,12 +8,11 @@ class TranslationSerializer(serializers.ModelSerializer):
     Serializer for the 'Translation' model
     """
 
-    user_id = serializers.UUIDField(allow_null=False)
-
     class Meta:
         model = Translation
         fields = [
             "translation_id",
+            "user_id",
             "created_at",
             "format",
             "original_content",

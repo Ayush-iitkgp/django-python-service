@@ -52,5 +52,5 @@ def api_key() -> Generator[str, None, None]:
 @pytest.fixture
 def client_api_token(api_key: str) -> Generator[APIClient, None, None]:
     client = APIClient()
-    client.credentials(API_KEY=api_key)
+    client.credentials(HTTP_AUTHORIZATION=f"Api-Key {api_key}")
     yield client

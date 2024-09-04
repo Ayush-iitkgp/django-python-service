@@ -30,6 +30,7 @@ services:
       - ./translation:/opt/django-python-service/translation
       - ./tests:/opt/django-python-service/tests
       - ./pyproject.toml:/opt/django-python-service/pyproject.toml
+      - ./poetry.lock:/opt/django-python-service/poetry.lock
     ports:
       - "8000:8000"
     environment:

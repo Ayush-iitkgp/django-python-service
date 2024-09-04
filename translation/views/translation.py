@@ -1,9 +1,8 @@
 import logging
+from typing import List
 
-from django.db import models
-from django.shortcuts import get_object_or_404
-from rest_framework.exceptions import ValidationError
-from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.generics import ListAPIView
 from rest_framework_api_key.permissions import HasAPIKey
 
 from translation.models import Translation
@@ -12,14 +11,16 @@ from translation.serializer import TranslationSerializer
 logger = logging.getLogger(__name__)
 
 
-class TranslateAndRetrieveAPIView(APIView):
+class TranslateAndRetrieveAPIView(ListAPIView):
     permission_classes = [HasAPIKey]
     serializer_class = TranslationSerializer
-    http_method_names = ["get", "post"]
 
-    def get_queryset(self) -> models.QuerySet:
+    def get_queryset(self) -> List[Translation]:
         user_id = self.kwargs.get("user_id")
-        if user_id:
-            _ = get_object_or_404(Translation, id=user_id)
-            return Translation.objects.filter(user_id=user_id)
-        raise ValidationError("User ID is required")
+        if not user_id:
+            raise ValidationError("user_id is required")
+
+        translations = Translation.objects.filter(user_id=user_id)
+        if len(translations) == 0:
+            raise NotFound(f"Translation not found for the user {user_id}")
+        return translations
