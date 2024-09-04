@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class TranslateAndRetrieveAPIView(APIView):
     permission_classes = [HasAPIKey]
     serializer_class = TranslationSerializer
-    http_method_names = ["get"]
+    http_method_names = ["get", "post"]
 
     def get_queryset(self) -> models.QuerySet:
         user_id = self.kwargs.get("user_id")

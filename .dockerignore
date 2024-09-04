@@ -1,0 +1,28 @@
+# Exclude node_modules directory
+node_modules
+
+# Exclude Python cache files
+__pycache__
+.mypy_cache
+# Exclude Git directory
+.git
+
+# Exclude environment files
+.env
+.venv
+
+# Exclude Dockerfile and .dockerignore itself
+Dockerfile
+.dockerignore
+
+# Exclude all files with .log extension
+*.log
+
+# Exclude all files in the build directory
+build/
+
+volumes
+
+.idea
+
+.DS_Store

@@ -5,7 +5,9 @@ WORKDIR /opt/django-python-service
 COPY pyproject.toml poetry.lock ./
 COPY app app/
 COPY manage.py ./
+COPY Makefile ./
 COPY translation translation/
+COPY tests tests/
 
 ENV PYTHONUNBUFFERED=1
 
