@@ -54,3 +54,8 @@ def client_api_token(api_key: str) -> Generator[APIClient, None, None]:
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION=f"Api-Key {api_key}")
     yield client
+
+
+@pytest.fixture
+def request_payload(user_id: UUID, original_content: str) -> Generator[dict, None, None]:
+    yield {"user_id": user_id, "original_content": original_content, "format": "text"}
