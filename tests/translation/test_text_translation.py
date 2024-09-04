@@ -12,13 +12,18 @@ def test_translate_text_success(client_api_token: APIClient, request_payload: di
     assert "translated_content" in body
 
 
-def test_get_translation_403_error(client_api_token: APIClient, request_payload: dict) -> None:
+def test_translate_text_403_error(client_api_token: APIClient, request_payload: dict) -> None:
     client_api_token.credentials(HTTP_AUTHORIZATION="Api-Key random key")
     response = client_api_token.post("/v1/translation/translate", data=request_payload)
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
-def test_get_translation_400_error(client_api_token: APIClient, request_payload: dict) -> None:
+def test_translate_text_400_error(client_api_token: APIClient, request_payload: dict) -> None:
     request_payload.pop("format")
     response = client_api_token.post("/v1/translation/translate", data=request_payload)
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+def test_translate_text_deepl_error(client_api_token: APIClient, request_payload: dict) -> None:
+    # TODO: Add test for the case when deepl raises an exception
+    pass
