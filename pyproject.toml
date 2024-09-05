@@ -16,6 +16,8 @@ drf-yasg = "1.21.6"
 django-debug-toolbar = "4.2.0"
 deepl = "^1.18.0"
 coreapi = "2.3.3"
+bs4 = "^0.0.2"
+argostranslate = "^1.9.6"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -22,6 +22,7 @@ def test_get_translation_success(client_api_token: APIClient, user_id: UUID, tra
 def test_get_translation_403_error(client_api_token: APIClient, user_id: UUID, translation: Translation) -> None:
     client_api_token.credentials(HTTP_AUTHORIZATION="Api-Key random key")
     response = client_api_token.get(f"/v1/translation/{user_id}?limit=10&offset=0")
+    # TODO: Investigate why wrong Api-Key returning 403 instead of 401 error
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
