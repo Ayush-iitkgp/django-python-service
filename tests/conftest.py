@@ -16,6 +16,7 @@ pytest_configure()
 from rest_framework.test import APIClient  # noqa: E402
 from rest_framework_api_key.models import APIKey  # noqa: E402
 
+from translation.enums import FormatType  # noqa: E402
 from translation.models import Translation  # noqa: E402
 
 
@@ -80,9 +81,9 @@ def client_api_token(api_key: str) -> Generator[APIClient, None, None]:
 
 @pytest.fixture
 def request_payload(user_id: UUID, original_content: str) -> Generator[dict, None, None]:
-    yield {"user_id": user_id, "original_content": original_content, "format": "text"}
+    yield {"user_id": user_id, "original_content": original_content, "format": FormatType.TEXT.value}
 
 
 @pytest.fixture
 def request_html_payload(user_id: UUID, original_html_content: str) -> Generator[dict, None, None]:
-    yield {"user_id": user_id, "original_content": original_html_content, "format": "html"}
+    yield {"user_id": user_id, "original_content": original_html_content, "format": FormatType.HTML.value}
