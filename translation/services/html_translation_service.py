@@ -130,7 +130,6 @@ class HTMLTranslationService:
         tag is only modified in place if tag injection is successful.
 
         Args:
-            underlying_translation: The translation to apply to the tags.
             tag: A depth=2 tag tree to attempt injection on.
 
         Returns:
