@@ -20,6 +20,17 @@ jobs:
         with:
           max-line-length: "120"
           extend-ignore: "E203,W503"
+
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v3
+
+      - name: Run isort
+        uses: isort/isort-action@v1
+        with:
+          configuration: "--profile black"
   tests:
     runs-on: ubuntu-latest
 
