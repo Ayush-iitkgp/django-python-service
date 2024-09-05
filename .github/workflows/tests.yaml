@@ -19,7 +19,7 @@ jobs:
         uses: py-actions/flake8@v2
         with:
           max-line-length: "120"
-          extend-ignore: "E203,W503"
+          ignore: "E203,W503"
 
   isort:
     runs-on: ubuntu-latest
