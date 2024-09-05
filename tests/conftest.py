@@ -35,6 +35,28 @@ def translated_content() -> Generator[str, None, None]:
 
 
 @pytest.fixture
+def original_html_content() -> Generator[str, None, None]:
+    yield (
+        "<div><h2 class='editor-heading-h2' dir='ltr'>"
+        "<span>hallo1 as headline</span></h2><p class='editor-paragraph' dir='ltr'>"
+        "<br></p><p class='editor-paragraph' dir='ltr'><span>hallo2 as paragraph</span></p>"
+        "<p class='editor-paragraph' dir='ltr'><span>hallo3 as paragraph with </span><b>"
+        "<strong class='editor-text-bold'>bold</strong></b><span> inline</span></p></div>"
+    )
+
+
+@pytest.fixture
+def translated_html_content() -> Generator[str, None, None]:
+    yield (
+        '<div><h2 class="editor-heading-h2" dir="ltr">'
+        '<span>hallo1 als Überschrift</span></h2><p class="editor-paragraph" dir="ltr"><br/></p>'
+        '<p class="editor-paragraph" dir="ltr"><span>hallo2 als Absatz</span></p>'
+        '<p class="editor-paragraph" dir="ltr"><span>hallo3 als Absatz mit'
+        ' </span><b><strong class="editor-text-bold">fett</strong></b><span> Inline</span></p></div>'
+    )
+
+
+@pytest.fixture
 def translation(user_id: UUID, original_content: str, translated_content: str) -> Generator[Translation, None, None]:
     yield Translation.objects.create(
         user_id=user_id,
@@ -59,3 +81,8 @@ def client_api_token(api_key: str) -> Generator[APIClient, None, None]:
 @pytest.fixture
 def request_payload(user_id: UUID, original_content: str) -> Generator[dict, None, None]:
     yield {"user_id": user_id, "original_content": original_content, "format": "text"}
+
+
+@pytest.fixture
+def request_html_payload(user_id: UUID, original_html_content: str) -> Generator[dict, None, None]:
+    yield {"user_id": user_id, "original_content": original_html_content, "format": "html"}

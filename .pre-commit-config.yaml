@@ -25,7 +25,8 @@ repos:
         types: [ python ]
         exclude: '.*/migrations/.*'
         args: [
-          '--max-line-length=120'
+          '--max-line-length=120',
+          '--extend-ignore=E203,W503'
         ]
       - id: isort
         name: isort

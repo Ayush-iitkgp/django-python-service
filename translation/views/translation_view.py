@@ -25,12 +25,14 @@ class TranslationView(APIView):
         serializer = TranslationInputSerializer(data=request.data)
         if not serializer.is_valid():
             raise ValidationError(serializer.errors)
+        logger.info(f"Translation POST request: {serializer.data}")
 
         validated_data = serializer.validated_data
         user_id = validated_data["user_id"]
         format = validated_data["format"]
         original_content = validated_data["original_content"]
 
+        translated_content = None
         if format == FormatType.TEXT.value:
             translated_content = TranslationService.translate_text(original_content)
         else:

@@ -1,9 +1,9 @@
 import logging
-from typing import Any, Union
+from typing import Union
 
-import bs4
 from argostranslate.tags import Tag
 from bs4 import BeautifulSoup
+from translatehtml import itag_of_soup, soup_of_itag
 
 from translation.services.translation_service import TranslationService
 
@@ -25,29 +25,13 @@ NON_TRANSLATEABLE_TAGS = [
 
 class HTMLTranslationService:
     @classmethod
-    def translate_html(cls, html: str) -> Any:
+    def translate_html(cls, html: str) -> str:
         soup = BeautifulSoup(html, "html.parser")
-        tag = cls.tag_of_soup(soup=soup)
+        tag = itag_of_soup(soup)
         translated_tag = cls.translate_tags(tag=tag)
-        translated_soup = cls.soup_of_tag(translated_tag)
-        return translated_soup
-
-    @classmethod
-    def tag_of_soup(cls, soup: Any) -> Union[Tag, str]:
-        """Returns an argostranslate.tags.ITag tree from a BeautifulSoup object.
-
-        Args:
-            soup (bs4.element.Navigablestring or bs4.element.Tag): Beautiful Soup object
-
-        Returns:
-            argostranslate.tags.ITag: Argos Translate ITag tree
-        """
-        if isinstance(soup, bs4.element.NavigableString):
-            return str(soup)
-        translateable = soup.name not in NON_TRANSLATEABLE_TAGS and soup.get("translate") != "no"
-        to_return = Tag([cls.tag_of_soup(content) for content in soup.contents], translateable)
-        to_return.soup = soup
-        return to_return
+        translated_soup = soup_of_itag(translated_tag)
+        logger.debug(f"Translated tag: {translated_soup}")
+        return str(translated_soup)
 
     @classmethod
     def translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
@@ -74,23 +58,6 @@ class HTMLTranslationService:
             tag.children = [cls.translate_tags(child) for child in tag.children]
 
         return tag
-
-    @classmethod
-    def soup_of_tag(cls, tag: Any) -> Any:
-        """Returns a BeautifulSoup object from an Argos Translate ITag.
-
-        Args:
-            tag (argostranslate.tags.ITag): ITag object to convert to Soup
-
-        Returns:
-            bs4.elements.BeautifulSoup: BeautifulSoup object
-        """
-        if isinstance(tag, str):
-            logger.info(f"soup_of_tag: tag is {tag}")
-            return bs4.element.NavigableString(tag)
-        soup = tag.soup
-        soup.contents = [cls.soup_of_tag(child) for child in tag.children]
-        return soup
 
     @classmethod
     def translate_preserve_formatting(cls, input_text: str) -> str:
@@ -198,7 +165,7 @@ class HTMLTranslationService:
         i = 0
         for injection_tag in injection_tags:
             if i < injection_tag.injection_index:
-                to_return.append(translated_text[i:injection_tag.injection_index])
+                to_return.append(translated_text[i : injection_tag.injection_index])
             to_return.append(injection_tag.tag)
             i = injection_tag.injection_index + len(injection_tag.text)
         if i < len(translated_text):
