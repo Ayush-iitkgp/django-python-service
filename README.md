@@ -17,3 +17,7 @@
 6. Login to django admin localhost:8000/admin
 7. Create an API Key
 8. Use the curl the command
+
+System Contraints:
+1. Does not translate time tags at present
+2. Can not translate text on the buttons
