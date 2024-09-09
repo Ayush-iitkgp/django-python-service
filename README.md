@@ -13,7 +13,7 @@ Project requires
 2. pyenv
 3. docker
 4. docker-desktop
-5. poetry (version 1.6.2)
+5. poetry (version 1.6.1)
 
 Install `pyenv` tool to manage python version.
 
@@ -35,6 +35,11 @@ First create a **.env** file and copy the configurations from [here]()
 ```bash
 # via docker
 docker compose up -d
+docker-compose exec service bash
+make create-migration
+make migrate
+make create-superuser
+make run
 ```
 
 The application is accessible at <http://localhost:8000>.
@@ -80,6 +85,6 @@ curl --location 'localhost:3000/v1/customer/create-password' \
 }'
 ```
 
-System Constraints:
+### System Constraints:
 1. Does not translate time tags at present
 2. Can not translate text on the buttons
