@@ -33,3 +33,7 @@ def compare_html_structure(expected_html: str, translated_html: str) -> bool:
     text_match = get_text_content(expected_soup) == get_text_content(translated_soup)
 
     return structure_match and text_match
+
+
+def format_html(html_content: str) -> str:
+    return html_content.replace("\n", "").replace("\t", "").replace("  ", "")

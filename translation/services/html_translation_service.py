@@ -29,7 +29,7 @@ class HTMLTranslationService:
     def translate_html(cls, html: str) -> str:
         soup = BeautifulSoup(html, "html.parser")
         tag = itag_of_soup(soup)
-        translated_tag = cls.snyc_translate_tags(tag=tag)
+        translated_tag = cls.parallel_translate_tags(tag=tag)
         translated_soup = soup_of_itag(translated_tag)
         logger.debug(f"Translated tag: {translated_soup}")
         return str(translated_soup)

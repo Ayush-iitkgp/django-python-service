@@ -2,7 +2,7 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from app.helper import compare_html_structure
+from app.helper import compare_html_structure, format_html
 
 pytestmark = pytest.mark.django_db
 
@@ -56,12 +56,12 @@ def test_translate_multiple_html_success(
     prefix = "tests/translation/api/data"
     file_name = f"{prefix}/en/{filename}.html"
     content = open(file_name, "r").read()
-    content = content.replace("\n", "").replace("\t", "").replace("  ", "")
+    content = format_html(content)
     request_html_payload["original_content"] = content
     response = client_api_token.post(path="/v1/translation/translate", data=request_html_payload)
     assert response.status_code == status.HTTP_201_CREATED
     body = response.json()
     german_html = open(f"{prefix}/de/{filename}.html", "r").read()
-    german_html = german_html.replace("\n", "").replace("\t", "").replace("  ", "")
+    german_html = format_html(german_html)
     german_translation = body["translated_content"]
     assert compare_html_structure(german_html, german_translation)
