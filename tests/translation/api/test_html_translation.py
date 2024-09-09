@@ -12,7 +12,8 @@ def test_translate_html_success(
     assert response.status_code == status.HTTP_201_CREATED
     body = response.json()
     assert "translated_content" in body
-    assert body["translated_content"] == translated_html_content
+    german_translation = body["translated_content"]
+    assert german_translation == translated_html_content
 
 
 def test_translate_html_403_error(client_api_token: APIClient, request_html_payload: dict) -> None:
@@ -59,4 +60,5 @@ def test_translate_multiple_html_success(
     # body = response.json()
     # german_html = open(f"{prefix}/de/{filename}.html", "r").read()
     # german_html = german_html.replace("\n", "").replace("\t", "").replace("  ", "")
-    # assert body["translated_content"] == german_html
+    # german_translation = body["translated_content"]
+    # assert german_translation == german_html

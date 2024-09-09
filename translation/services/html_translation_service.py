@@ -1,5 +1,5 @@
-import concurrent.futures
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from typing import Union
 
 from argostranslate.tags import Tag
@@ -76,35 +76,21 @@ class HTMLTranslationService:
         """
         # Base case: if it's a string, translate it
         if isinstance(tag, str):
+            # Only translate the text content, leave tags intact
             return cls.translate_preserve_formatting(tag)
 
-        # If the tag is not translatable, return it as is
         if not tag.translateable:
+            # If the tag is not translateable (e.g., <code> or other), return it as is
             return tag
 
-        # If the tag depth is 2, try injecting the translated tags
-        if cls.depth(tag) == 2:
-            tag_injection = cls.inject_tags_inference(tag)
-            if tag_injection is not None:
-                logger.info("translate_tags", "tag injection successful")
-                return tag_injection
-
-        # Recursive case: parallel translation of child tags
+            # Use ThreadPoolExecutor for parallel translation of child text nodes
         children = tag.children
 
-        # Use ThreadPoolExecutor to translate child tags in parallel
-        with concurrent.futures.ThreadPoolExecutor() as executor:
-            # Submit translation tasks for each child
+        with ThreadPoolExecutor() as executor:
             future_to_child = {executor.submit(cls.parallel_translate_tags, child): child for child in children}
+            translated_children = [future.result() for future in future_to_child]
 
-            # Collect the translated results as tasks are completed
-            translated_children = []
-            for future in concurrent.futures.as_completed(future_to_child):
-                translated_children.append(future.result())
-
-        # Replace the tag's children with the translated versions
         tag.children = translated_children
-
         return tag
 
     @classmethod
