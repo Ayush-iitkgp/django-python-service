@@ -52,9 +52,11 @@ def test_translate_multiple_html_success(
     prefix = "tests/translation/api/data"
     file_name = f"{prefix}/en/{filename}.html"
     content = open(file_name, "r").read()
+    content = content.replace("\n", "").replace("\t", "").replace("  ", "")
     request_html_payload["original_content"] = content
     response = client_api_token.post(path="/v1/translation/translate", data=request_html_payload)
     assert response.status_code == status.HTTP_201_CREATED
-    # body = response.json()
-    # german_html = open(f"{prefix}/de/{filename}.html", "r").read()
-    # assert body["translated_content"] == german_html
+    body = response.json()
+    german_html = open(f"{prefix}/de/{filename}.html", "r").read()
+    german_html = german_html.replace("\n", "").replace("\t", "").replace("  ", "")
+    assert body["translated_content"] == german_html
