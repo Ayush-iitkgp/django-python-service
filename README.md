@@ -72,17 +72,17 @@ make run
 
 2. Login to django admin <http://localhost:8000/admin>
 3. Create an API Key
-4. translate
+4. call translate endpoint
 ```bash
-curl --location 'localhost:3000/v1/customer/create-password' \
---header 'client-version: 2.1.1' \
+curl --location 'localhost:8000/v1/translation/translate' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer {JWT_TOKEN}' \
---data-raw '{
-    "email": "osefhhchnsic@protonmail.com",
-    "password": {PASSWORD},
-    "confirm_password": {PASSWORD}
-}'
+--header 'Authorization: Api-Key {API_KEY}' \
+--data '{
+    "user_id": "119c40ef-2e9f-4992-9433-94ef99daeb19",
+    "format": "html",
+    "original_content": "<div><h2 class='\''editor-heading-h2'\'' dir='\''ltr'\''><span>hallo1 as headline</span></h2><p class='\''editor-paragraph'\'' dir='\''ltr'\''><br></p><p class='\''editor-paragraph'\'' dir='\''ltr'\''><span>hallo2 as paragraph</span></p><p class='\''editor-paragraph'\'' dir='\''ltr'\''><span>hallo3 as paragraph with </span><b><strong class='\''editor-text-bold'\''>bold</strong></b><span> inline</span></p></div>"
+}
+'
 ```
 
 ### System Constraints:
