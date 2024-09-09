@@ -30,7 +30,7 @@ brew install docker-compose
 ```
 
 ### Running
-First create a **.env** file and copy the configurations from [here]()
+First create a **.env** file and copy the secrets I have shared with you.
 
 ```bash
 # via docker
