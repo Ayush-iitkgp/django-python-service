@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example 8</title>
+</head>
+<body>
+    <h1>Example with template</h1>
+    <template id="my-template">
+        <p>This is template content.</p>
+    </template>
+    <script>
+        const template = document.getElementById('my-template').content.cloneNode(true);
+        document.body.appendChild(template);
+    </script>
+</body>
+</html>

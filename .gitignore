@@ -7,7 +7,6 @@ __pycache__/
 
 # C extensions
 *.so
-data
 celerybeat-schedule
 .DS_Store
 
