@@ -20,8 +20,16 @@ def get_soup(html_content: str) -> BeautifulSoup:
     return BeautifulSoup(html_content, "html.parser")
 
 
+def get_text_content(soup: BeautifulSoup) -> str:
+    return soup.get_text(separator=" ").strip()
+
+
 def compare_html_structure(expected_html: str, translated_html: str) -> bool:
     expected_soup = get_soup(expected_html)
     translated_soup = get_soup(translated_html)
 
-    return str(expected_soup.prettify()) == str(translated_soup.prettify())
+    structure_match = str(expected_soup.prettify()) == str(translated_soup.prettify())
+
+    text_match = get_text_content(expected_soup) == get_text_content(translated_soup)
+
+    return structure_match and text_match

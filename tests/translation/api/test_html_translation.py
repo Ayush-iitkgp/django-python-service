@@ -64,4 +64,4 @@ def test_translate_multiple_html_success(
     german_html = open(f"{prefix}/de/{filename}.html", "r").read()
     german_html = german_html.replace("\n", "").replace("\t", "").replace("  ", "")
     german_translation = body["translated_content"]
-    compare_html_structure(german_html, german_translation)
+    assert compare_html_structure(german_html, german_translation)
