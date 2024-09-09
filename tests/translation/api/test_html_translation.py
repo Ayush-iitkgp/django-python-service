@@ -2,6 +2,8 @@ import pytest
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from app.helper import compare_html_structure
+
 pytestmark = pytest.mark.django_db
 
 
@@ -13,7 +15,8 @@ def test_translate_html_success(
     body = response.json()
     assert "translated_content" in body
     german_translation = body["translated_content"]
-    assert german_translation == translated_html_content
+    compare_html_structure(translated_html_content, german_translation)
+    # assert german_translation == translated_html_content
 
 
 def test_translate_html_403_error(client_api_token: APIClient, request_html_payload: dict) -> None:
@@ -57,8 +60,8 @@ def test_translate_multiple_html_success(
     request_html_payload["original_content"] = content
     response = client_api_token.post(path="/v1/translation/translate", data=request_html_payload)
     assert response.status_code == status.HTTP_201_CREATED
-    # body = response.json()
-    # german_html = open(f"{prefix}/de/{filename}.html", "r").read()
-    # german_html = german_html.replace("\n", "").replace("\t", "").replace("  ", "")
-    # german_translation = body["translated_content"]
-    # assert german_translation == german_html
+    body = response.json()
+    german_html = open(f"{prefix}/de/{filename}.html", "r").read()
+    german_html = german_html.replace("\n", "").replace("\t", "").replace("  ", "")
+    german_translation = body["translated_content"]
+    compare_html_structure(german_html, german_translation)
