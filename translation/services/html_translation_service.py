@@ -1,3 +1,4 @@
+import concurrent.futures
 import logging
 from typing import Union
 
@@ -28,13 +29,13 @@ class HTMLTranslationService:
     def translate_html(cls, html: str) -> str:
         soup = BeautifulSoup(html, "html.parser")
         tag = itag_of_soup(soup)
-        translated_tag = cls.translate_tags(tag=tag)
+        translated_tag = cls.parallel_translate_tags(tag=tag)
         translated_soup = soup_of_itag(translated_tag)
         logger.debug(f"Translated tag: {translated_soup}")
         return str(translated_soup)
 
     @classmethod
-    def translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
+    def snyc_translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
         """Translate an ITag or str
 
         Recursively takes either an ITag or a str, modifies it in place, and returns the translated tag tree
@@ -55,7 +56,54 @@ class HTMLTranslationService:
                 logger.info("translate_tags", "tag injection successful")
                 return tag_injection
         else:
-            tag.children = [cls.translate_tags(child) for child in tag.children]
+            tag.children = [cls.snyc_translate_tags(child) for child in tag.children]
+
+        return tag
+
+    @classmethod
+    def parallel_translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
+        """Translate an ITag or str in parallel.
+
+        Recursively takes either an ITag or a str, modifies it in place,
+        and returns the translated tag tree, utilizing parallel translation
+        for child tags.
+
+        Args:
+            tag: The tag tree to translate.
+
+        Returns:
+            The translated tag tree.
+        """
+        # Base case: if it's a string, translate it
+        if isinstance(tag, str):
+            return cls.translate_preserve_formatting(tag)
+
+        # If the tag is not translatable, return it as is
+        if not tag.translateable:
+            return tag
+
+        # If the tag depth is 2, try injecting the translated tags
+        if cls.depth(tag) == 2:
+            tag_injection = cls.inject_tags_inference(tag)
+            if tag_injection is not None:
+                logger.info("translate_tags", "tag injection successful")
+                return tag_injection
+
+        # Recursive case: parallel translation of child tags
+        children = tag.children
+
+        # Use ThreadPoolExecutor to translate child tags in parallel
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            # Submit translation tasks for each child
+            future_to_child = {executor.submit(cls.parallel_translate_tags, child): child for child in children}
+
+            # Collect the translated results as tasks are completed
+            translated_children = []
+            for future in concurrent.futures.as_completed(future_to_child):
+                translated_children.append(future.result())
+
+        # Replace the tag's children with the translated versions
+        tag.children = translated_children
 
         return tag
 
