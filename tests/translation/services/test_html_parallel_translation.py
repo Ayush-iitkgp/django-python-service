@@ -37,7 +37,7 @@ def test_parallel_translation_success(
     content = format_html(content)
     soup = BeautifulSoup(content, "html.parser")
     tag = itag_of_soup(soup)
-    german_translation = HTMLTranslationService.parallel_translate_tags(tag)
+    german_translation = HTMLTranslationService.parallel_thread_translate_tags(tag)
     german_translation = soup_of_itag(german_translation)
     expected_german_html = open(f"{prefix}/de/{filename}.html", "r").read()
     expected_german_html = format_html(expected_german_html)

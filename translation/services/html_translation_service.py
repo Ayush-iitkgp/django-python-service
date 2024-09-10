@@ -1,5 +1,5 @@
 import logging
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from typing import Union
 
 from argostranslate.tags import Tag
@@ -29,7 +29,7 @@ class HTMLTranslationService:
     def translate_html(cls, html: str) -> str:
         soup = BeautifulSoup(html, "html.parser")
         tag = itag_of_soup(soup)
-        translated_tag = cls.parallel_translate_tags(tag=tag)
+        translated_tag = cls.parallel_thread_translate_tags(tag=tag)
         translated_soup = soup_of_itag(translated_tag)
         logger.debug(f"Translated tag: {translated_soup}")
         return str(translated_soup)
@@ -56,7 +56,7 @@ class HTMLTranslationService:
         return tag
 
     @classmethod
-    def parallel_translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
+    def parallel_thread_translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
         """Translate an ITag or str in parallel.
 
         Recursively takes either an ITag or a str, modifies it in place,
@@ -71,18 +71,43 @@ class HTMLTranslationService:
         """
         # Base case: if it's a string, translate it
         if isinstance(tag, str):
-            # Only translate the text content, leave tags intact
             return cls.translate_preserve_formatting(tag)
 
         if not tag.translateable:
-            # If the tag is not translateable (e.g., <code> or other), return it as is
             return tag
-
-            # Use ThreadPoolExecutor for parallel translation of child text nodes
         children = tag.children
 
         with ThreadPoolExecutor() as executor:
-            future_to_child = {executor.submit(cls.parallel_translate_tags, child): child for child in children}
+            future_to_child = {executor.submit(cls.parallel_thread_translate_tags, child): child for child in children}
+            translated_children = [future.result() for future in future_to_child]
+
+        tag.children = translated_children
+        return tag
+
+    @classmethod
+    def parallel_process_translate_tags(cls, tag: Union[Tag, str]) -> Union[Tag, str]:
+        """Translate an ITag or str in parallel.
+
+        Recursively takes either an ITag or a str, modifies it in place,
+        and returns the translated tag tree, utilizing parallel translation
+        using python process for child tags.
+
+        Args:
+            tag: The tag tree to translate.
+
+        Returns:
+            The translated tag tree.
+        """
+        # Base case: if it's a string, translate it
+        if isinstance(tag, str):
+            return cls.translate_preserve_formatting(tag)
+
+        if not tag.translateable:
+            return tag
+        children = tag.children
+
+        with ProcessPoolExecutor() as executor:
+            future_to_child = {executor.submit(cls.parallel_process_translate_tags, child): child for child in children}
             translated_children = [future.result() for future in future_to_child]
 
         tag.children = translated_children

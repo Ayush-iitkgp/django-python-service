@@ -39,7 +39,7 @@ def generate_large_html(num_sections: int, num_paragraphs: int) -> str:
         (2, 4),
     ],
 )
-def test_translation_performance(num_sections: int, num_paragraphs: int):
+def test_translation_performance(num_sections: int, num_paragraphs: int) -> None:
     large_html = generate_large_html(num_sections, num_paragraphs)
 
     soup = BeautifulSoup(large_html, "html.parser")
@@ -55,3 +55,30 @@ def test_translation_performance(num_sections: int, num_paragraphs: int):
     parallel_duration = end_time - start_time
 
     assert sync_duration > parallel_duration, "Parallel translation should be faster than sync translation."
+
+
+@pytest.mark.parametrize(
+    "num_sections, num_paragraphs",
+    [
+        (1, 2),
+        (2, 4),
+    ],
+)
+def test_translation_performance_thread_vs_pool(num_sections: int, num_paragraphs: int) -> None:
+    large_html = generate_large_html(num_sections, num_paragraphs)
+
+    soup = BeautifulSoup(large_html, "html.parser")
+    tag = itag_of_soup(soup)
+    start_time = time.time()
+    _ = HTMLTranslationService.parallel_thread_translate_tags(tag)
+    end_time = time.time()
+    thread_duration = end_time - start_time
+
+    start_time = time.time()
+    _ = HTMLTranslationService.parallel_process_translate_tags(large_html)
+    end_time = time.time()
+    process_duration = end_time - start_time
+
+    assert (
+        thread_duration > process_duration
+    ), "Parallel process translation should be faster than parallel thread translation."
