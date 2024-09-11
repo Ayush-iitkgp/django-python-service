@@ -50,7 +50,7 @@ def test_translation_performance(num_sections: int, num_paragraphs: int) -> None
     sync_duration = end_time - start_time
 
     start_time = time.time()
-    _ = HTMLTranslationService.translate_html(large_html)
+    _ = HTMLTranslationService.parallel_thread_translate_tags(tag)
     end_time = time.time()
     parallel_duration = end_time - start_time
 
