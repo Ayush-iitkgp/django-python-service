@@ -19,8 +19,4 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 RUN poetry config virtualenvs.create false
 RUN poetry install --no-root
 
-RUN apt-get update && \
-    apt-get install -y make postgresql postgresql-contrib postgresql-client && \
-    rm -rf /var/lib/apt/lists/*
-
 EXPOSE 8000
