@@ -88,3 +88,14 @@ curl --location 'localhost:8000/v1/translation/translate' \
 ### System Constraints:
 1. Does not translate time tags at present
 2. Can not translate text on the buttons
+3. Instead of treating
+```html
+<span>hallo3 as paragraph with </span><b><strong class='editor-text-bold'>bold</strong></b><span> inline</span>
+
+```
+as one block for translation, the current implementation splits it into multiple components for translation:
+```html
+<span>hallo3 as paragraph with </span>
+<b><strong class='editor-text-bold'>bold</strong></b>
+<span> inline</span>
+```
