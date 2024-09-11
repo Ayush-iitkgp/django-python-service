@@ -17,5 +17,6 @@ class TranslationService:
                 return translations.text
             return [translation.text for translation in translations]
 
+        # TODO: Handle deepl exceptions better
         except Exception as ex:
             raise ex

@@ -128,18 +128,3 @@ class HTMLTranslationService:
             if input_text[-1] == " " and not (len(translated_text) > 0 and translated_text[-1] == " "):
                 translated_text = translated_text + " "
         return translated_text
-
-    @classmethod
-    def depth(cls, tag: Tag | str) -> int:
-        """Returns the depth of an ITag or str.
-
-        A str has depth 0, ITag([]) has depth 0, ITag(['str']) has depth 1.
-
-        Args:
-            tag: The ITag or string to get the depth of.
-        """
-        if type(tag) is str:
-            return 0
-        if len(tag.children) == 0:
-            return 0
-        return max([cls.depth(t) for t in tag.children])
