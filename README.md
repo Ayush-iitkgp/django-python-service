@@ -90,7 +90,7 @@ curl --location 'localhost:8000/v1/translation/translate' \
 '
 ```
 
-### System Constraints:
+### System Constraints
 1. Does not translate time tags at present
 2. Can not translate text on the buttons
 3. Instead of treating
@@ -104,3 +104,9 @@ as one block for translation, the current implementation splits it into multiple
 <b><strong class='editor-text-bold'>bold</strong></b>
 <span> inline</span>
 ```
+
+### Open Questions
+1. The service is very CPU intensive. How do we determine the specifications for our pods based on this information?
+2. How many threads are being created for each HTML input?
+3. What is the bottleneck of the service?
+4. Can we batch our HTML tags translation instead creating one thread for each text segment?
