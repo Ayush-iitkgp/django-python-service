@@ -106,7 +106,10 @@ as one block for translation, the current implementation splits it into multiple
 ```
 
 ### Open Questions
-1. The service is very CPU intensive. How do we determine the specifications for our pods based on this information?
+1. The service is very CPU intensive. How do we determine the specifications for our pods based on this information? Also, what will be the scaling strategy for our pods?
 2. How many threads are being created for each HTML input?
 3. What is the bottleneck of the service?
 4. Can we batch our HTML tags translation instead creating one thread for each text segment?
+
+### Key Findings
+1. Multi-threaded solution is faster than multi-processing solution because our use-case is I/O intensive where threads are faster than processes because process creation is more expensive.
