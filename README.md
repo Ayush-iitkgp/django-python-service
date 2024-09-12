@@ -6,6 +6,11 @@ This is a Python based Django service that provides endpoints for creating trans
 
 The design decisions of this service have been based on the discussion [here](https://docs.google.com/document/d/1kh2ybkZPr9LXM5Yv08-6CU1FTEjTqkUb0ZdYhKPEx8M/edit?usp=sharing).
 
+### Architecture
+![Solution Architecture](docs/images/solution_architecture.png)
+
+Excalidraw Flow Diagram: https://excalidraw.com/#json=yyBV76AJi0DZ0Gg7oHn5a,JCzDkcdZk1INg8QId7b5Dw
+
 ### Prerequisites
 
 Project requires
