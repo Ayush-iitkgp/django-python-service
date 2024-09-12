@@ -91,7 +91,7 @@ curl --location 'localhost:8000/v1/translation/translate' \
 ```
 
 ### System Constraints
-1. Does not translate time tags at present
+1. Does not translate time and address tags at present. TODO: Translated time and address tags as well.
 2. Can not translate text on the buttons
 3. Instead of treating
 ```html
@@ -109,7 +109,10 @@ as one block for translation, the current implementation splits it into multiple
 1. The service is very CPU intensive. How do we determine the specifications for our pods based on this information? Also, what will be the scaling strategy for our pods?
 2. How many threads are being created for each HTML input?
 3. What is the bottleneck of the service?
-4. Can we batch our HTML tags translation instead creating one thread for each text segment?
+4. There are limits imposed by the Operating System to the number of threads that can be created. What happens for huge HTML files when the total number of threads needed to be created is more than the OS limit?
+5. Each thread typically needs 1-2 MB memory space for its stack.
+6. Can we batch our HTML tags translation instead creating one thread for each text segment?
 
 ### Key Findings
-1. Multi-threaded solution is faster than multi-processing solution because our use-case is I/O intensive where threads are faster than processes because process creation is more expensive.
+1. Multi-threaded solution is faster than multi-process solution because our use-case is I/O intensive where threads are faster than processes because process creation is more expensive.
+2. For the provided example input, we will have a total of 11 threads created during the translation.

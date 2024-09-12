@@ -10,19 +10,6 @@ from translation.services.translation_service import TranslationService
 
 logger = logging.getLogger(__name__)
 
-NON_TRANSLATEABLE_TAGS = [
-    "address",
-    "applet",
-    "audio",
-    "canvas",
-    "code",
-    "embed",
-    "script",
-    "style",
-    "time",
-    "video",
-]
-
 
 class HTMLTranslationService:
     @classmethod
